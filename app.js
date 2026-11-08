@@ -1,4 +1,4 @@
-// Acessível SP — lógica principal. Usa i18n.js (dicionário) e busca os
+// mobilidadeBR — lógica principal. Usa i18n.js (dicionário) e busca os
 // dados já exportados em data/*.json pelo pipeline Python do projeto.
 
 const CORES = { vermelho: "#C1272D", violeta: "#6C5296", verde: "#2E6F4E", ambar: "#B5790A", cinza: "#8A8F8C" };
@@ -187,8 +187,8 @@ function focarMarcador(idx) {
 function renderizarMapaLugares() {
   if (!mapaLugares) {
     mapaLugares = L.map("mapa-lugares").setView([-23.55, -46.63], 12);
-    L.tileLayer("https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png", {
-      attribution: "&copy; CARTO &copy; OpenStreetMap contributors",
+    L.tileLayer("https://tile.openstreetmap.org/{z}/{x}/{y}.png", {
+      attribution: "&copy; OpenStreetMap contributors",
     }).addTo(mapaLugares);
     mapaLugares._camadaPontos = L.layerGroup().addTo(mapaLugares);
   }
@@ -237,8 +237,8 @@ function renderizarRuasTexto() {
 function renderizarMapaRuas() {
   if (mapaRuas) return;
   mapaRuas = L.map("mapa-ruas").setView([-23.55, -46.63], 11);
-  L.tileLayer("https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png", {
-    attribution: "&copy; CARTO &copy; OpenStreetMap contributors",
+  L.tileLayer("https://tile.openstreetmap.org/{z}/{x}/{y}.png", {
+    attribution: "&copy; OpenStreetMap contributors",
   }).addTo(mapaRuas);
   L.heatLayer(DADOS.ruasCalor, { radius: 9, blur: 12, maxZoom: 13 }).addTo(mapaRuas);
 }
@@ -340,7 +340,7 @@ function baixarResumoCidade(m) {
   const total = DADOS.municipios.length;
   const rotulo = LANG === "en" ? m.rotulo_en : m.rotulo_pt;
   const texto = `ACESSIBILIDADE EM ${m.municipio}
-Fonte: site Acessível SP / projeto Mapa da Equidade
+Fonte: site mobilidadeBR / projeto Mapa da Equidade
 
 Posição no país: #${m.posicao} de ${total} municípios (índice de déficit: ${m.indice}/100 — quanto maior, pior)
 Perfil: ${rotulo}
@@ -373,8 +373,8 @@ function renderizarPanoramaBrasil() {
 
   if (!mapaBrasil) {
     mapaBrasil = L.map("mapa-brasil").setView([-14.2, -51.9], 3.6);
-    L.tileLayer("https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png", {
-      attribution: "&copy; CARTO &copy; OpenStreetMap contributors",
+    L.tileLayer("https://tile.openstreetmap.org/{z}/{x}/{y}.png", {
+      attribution: "&copy; OpenStreetMap contributors",
     }).addTo(mapaBrasil);
 
     const porUf = DADOS.resumo.por_uf;

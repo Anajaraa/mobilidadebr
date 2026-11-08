@@ -247,6 +247,11 @@ footer.rodape { text-align: center; padding: 32px 24px 48px; color: var(--ink-mu
 /* ---------- Leaflet ajustes ---------- */
 .leaflet-popup-content-wrapper, .leaflet-popup-tip { background: var(--surface); color: var(--ink); }
 .leaflet-control-attribution { font-size: 10px; }
+/* OSM só tem tile claro — escurecemos via filtro no tema escuro */
+:root[data-theme="dark"] .leaflet-tile-pane { filter: invert(1) hue-rotate(180deg) brightness(0.92) contrast(0.9) saturate(0.85); }
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) .leaflet-tile-pane { filter: invert(1) hue-rotate(180deg) brightness(0.92) contrast(0.9) saturate(0.85); }
+}
 
 /* ---------- Responsivo ---------- */
 @media (max-width: 640px) {

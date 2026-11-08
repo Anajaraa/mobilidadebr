@@ -1,8 +1,8 @@
-// Dicionário de tradução PT-BR / English — Acessível SP
+// Dicionário de tradução PT-BR / English — mobilidadeBR
 const I18N = {
   pt: {
-    titulo: "Acessível SP",
-    marca: "Acessível SP",
+    titulo: "mobilidadeBR",
+    marca: "mobilidadeBR",
     hero_eyebrow: "Guia feito com dados abertos — IBGE, RAIS, OpenStreetMap",
     hero_titulo: "Para onde você quer ir?",
     hero_subtitulo: "Lugares acessíveis de verdade em São Paulo, o que esperar antes de viajar, e a situação real da sua cidade — com dado aberto, e um aviso claro sempre que a resposta é \"isso não existe em lugar nenhum\".",
@@ -73,8 +73,8 @@ const I18N = {
     rodape_link: "Mapa da Equidade",
   },
   en: {
-    titulo: "Accessible SP",
-    marca: "Accessible SP",
+    titulo: "mobilidadeBR",
+    marca: "mobilidadeBR",
     hero_eyebrow: "A guide built with open data — IBGE, RAIS, OpenStreetMap",
     hero_titulo: "Where do you want to go?",
     hero_subtitulo: "Genuinely accessible places in São Paulo, what to expect before traveling, and the real accessibility situation in your city — real data, and a plain warning whenever the honest answer is \"this doesn't exist anywhere\".",

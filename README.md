@@ -1,4 +1,4 @@
-# Acessível SP
+# mobilidadeBR
 
 Site estático (HTML + CSS + JavaScript puro) para **pessoas com deficiência usarem diretamente** — ache lugares acessíveis em São Paulo, saiba o que esperar antes de viajar, e veja a situação de acessibilidade de qualquer um dos 5.570 municípios do Brasil.
 
