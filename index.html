@@ -4,146 +4,169 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Acessível SP</title>
-<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%230B5FB0' stroke-width='2.2' stroke-linecap='round' stroke-linejoin='round'%3E%3Ccircle cx='12' cy='12' r='10'/%3E%3Ccircle cx='12' cy='4' r='1.3' fill='%230B5FB0'/%3E%3Cpath d='M9 7h6M11 7v4l-3 6M13 11l3 6M11 11h5'/%3E%3C/svg%3E">
-<link href="https://fonts.googleapis.com/css2?family=Lexend:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23C1272D' stroke-width='2.4' stroke-linecap='round' stroke-linejoin='round'%3E%3Ccircle cx='12' cy='12' r='10'/%3E%3Ccircle cx='12' cy='4' r='1.3' fill='%23C1272D'/%3E%3Cpath d='M9 7h6M11 7v4l-3 6M13 11l3 6M11 11h5'/%3E%3C/svg%3E">
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,500;0,9..144,600;1,9..144,500&family=Lexend:wght@400;500;600;700;800&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
 <link rel="stylesheet" href="styles.css">
 </head>
 <body>
 
 <header class="topbar">
-  <div class="topbar-inner">
-    <span class="brand"><i data-lucide="accessibility"></i> Acessível SP</span>
-    <div class="topbar-controls">
-      <select id="lang-toggle" aria-label="Idioma / Language">
-        <option value="pt">PT-BR</option>
-        <option value="en">English</option>
-      </select>
-      <button id="theme-toggle" aria-label="Alternar tema claro/escuro"><i data-lucide="sun-moon"></i></button>
-    </div>
+  <a class="brand" href="#topo"><i data-lucide="accessibility"></i> <span data-i18n="marca"></span></a>
+  <div class="topbar-controls">
+    <select id="lang-toggle" aria-label="Idioma / Language">
+      <option value="pt">PT-BR</option>
+      <option value="en">English</option>
+    </select>
+    <button id="theme-toggle" aria-label="Alternar tema claro/escuro"><i data-lucide="sun-moon"></i></button>
   </div>
 </header>
 
-<section class="hero">
+<section class="hero" id="topo">
+  <div class="hero-skyline" aria-hidden="true">
+    <svg viewBox="0 0 1440 360" preserveAspectRatio="none">
+      <rect class="sky-building b1" x="30" y="170" width="60" height="190"/>
+      <rect class="sky-building b2" x="100" y="110" width="40" height="250"/>
+      <rect class="sky-building b3" x="150" y="200" width="90" height="160"/>
+      <rect class="sky-masp" x="270" y="230" width="220" height="18"/>
+      <rect class="sky-masp" x="290" y="248" width="14" height="112"/>
+      <rect class="sky-masp" x="466" y="248" width="14" height="112"/>
+      <rect class="sky-building b2" x="540" y="140" width="46" height="220"/>
+      <rect class="sky-building b1" x="600" y="190" width="70" height="170"/>
+      <rect class="sky-building b3" x="690" y="90" width="38" height="270"/>
+      <circle class="sky-tree" cx="820" cy="250" r="70"/>
+      <rect class="sky-tree-trunk" x="812" y="300" width="16" height="60"/>
+      <rect class="sky-building b1" x="920" y="160" width="55" height="200"/>
+      <rect class="sky-building b2" x="990" y="210" width="80" height="150"/>
+      <rect class="sky-building b3" x="1090" y="120" width="42" height="240"/>
+      <circle class="sky-tree" cx="1200" cy="260" r="56"/>
+      <rect class="sky-tree-trunk" x="1193" y="300" width="14" height="60"/>
+      <rect class="sky-building b2" x="1280" y="180" width="60" height="180"/>
+      <rect class="sky-building b1" x="1360" y="220" width="50" height="140"/>
+    </svg>
+  </div>
   <div class="hero-inner">
-    <div class="eyebrow" data-i18n="eyebrow"></div>
-    <h1><i data-lucide="accessibility" class="icon-hero"></i> <span data-i18n="titulo"></span></h1>
-    <p data-i18n="subtitulo"></p>
+    <div class="eyebrow" data-i18n="hero_eyebrow"></div>
+    <h1 data-i18n="hero_titulo"></h1>
+    <p class="hero-sub" data-i18n="hero_subtitulo"></p>
+
+    <form class="hero-busca" id="form-busca-cidade">
+      <i data-lucide="search"></i>
+      <input id="busca-cidade" type="text" list="lista-cidades" data-i18n-placeholder="hero_busca_placeholder" autocomplete="off">
+      <datalist id="lista-cidades"></datalist>
+      <button type="submit" data-i18n="hero_busca_botao"></button>
+    </form>
+    <p class="hero-busca-erro" id="busca-cidade-erro"></p>
+    <a class="hero-cta-secundaria" href="#lugares" data-i18n="hero_cta_lugares"></a>
+
     <div class="hero-stats">
-      <div class="hero-stat"><div class="v">326</div><div class="l" data-i18n="hero_s1"></div></div>
-      <div class="hero-stat"><div class="v">45</div><div class="l" data-i18n="hero_s2"></div></div>
-      <div class="hero-stat"><div class="v">11.241</div><div class="l" data-i18n="hero_s3"></div></div>
-      <div class="hero-stat"><div class="v">5.570</div><div class="l" data-i18n="hero_s4"></div></div>
+      <div class="hero-stat"><span class="v">690</span><span class="l" data-i18n="hero_s1"></span></div>
+      <div class="hero-stat"><span class="v">31</span><span class="l" data-i18n="hero_s2"></span></div>
+      <div class="hero-stat"><span class="v">11.241</span><span class="l" data-i18n="hero_s3"></span></div>
+      <div class="hero-stat"><span class="v">5.570</span><span class="l" data-i18n="hero_s4"></span></div>
     </div>
   </div>
 </section>
 
-<nav class="tabs" role="tablist">
-  <button class="tab active" data-tab="inicio"><i data-lucide="home"></i> <span data-i18n="tab_inicio"></span></button>
-  <button class="tab" data-tab="lugares"><i data-lucide="map-pin"></i> <span data-i18n="tab_lugares"></span></button>
-  <button class="tab" data-tab="viagem"><i data-lucide="plane"></i> <span data-i18n="tab_viagem"></span></button>
-  <button class="tab" data-tab="cidade"><i data-lucide="building-2"></i> <span data-i18n="tab_cidade"></span></button>
-  <button class="tab" data-tab="brasil"><i data-lucide="map"></i> <span data-i18n="tab_brasil"></span></button>
+<nav class="chip-nav" aria-label="Seções">
+  <a class="chip-link" data-section="lugares" href="#lugares"><i data-lucide="map-pin"></i> <span data-i18n="nav_lugares"></span></a>
+  <a class="chip-link" data-section="viagem" href="#viagem"><i data-lucide="plane"></i> <span data-i18n="nav_viagem"></span></a>
+  <a class="chip-link" data-section="cidade" href="#cidade"><i data-lucide="building-2"></i> <span data-i18n="nav_cidade"></span></a>
+  <a class="chip-link" data-section="brasil" href="#brasil"><i data-lucide="map"></i> <span data-i18n="nav_brasil"></span></a>
 </nav>
 
-<main class="container">
+<div class="aviso-faixa">
+  <i data-lucide="info"></i>
+  <div><b data-i18n="honestidade_titulo"></b> — <span data-i18n="honestidade_texto"></span></div>
+</div>
 
-  <!-- INÍCIO -->
-  <section id="panel-inicio" class="panel active">
-    <h2 data-i18n="inicio_titulo"></h2>
-    <div class="grid-3">
-      <div class="card-box"><h4><i data-lucide="map-pin"></i> <span data-i18n="inicio_lugares_t"></span></h4><p data-i18n="inicio_lugares_d"></p></div>
-      <div class="card-box"><h4><i data-lucide="plane"></i> <span data-i18n="inicio_viagem_t"></span></h4><p data-i18n="inicio_viagem_d"></p></div>
-      <div class="card-box"><h4><i data-lucide="building-2"></i> <span data-i18n="inicio_cidade_t"></span></h4><p data-i18n="inicio_cidade_d"></p></div>
-    </div>
-    <div class="aviso-card">
-      <b><i data-lucide="info"></i> <span data-i18n="inicio_honestidade_titulo"></span></b><br>
-      <span data-i18n="inicio_honestidade_texto"></span>
-    </div>
-  </section>
-
-  <!-- LUGARES ACESSÍVEIS -->
-  <section id="panel-lugares" class="panel">
+<!-- LUGARES ACESSÍVEIS -->
+<section id="lugares" class="secao">
+  <div class="secao-head">
+    <div class="eyebrow" data-i18n="lugares_eyebrow"></div>
     <h2 data-i18n="lugares_titulo"></h2>
-    <p class="caption" data-i18n="lugares_caption"></p>
+    <p class="secao-caption" data-i18n="lugares_caption"></p>
+  </div>
 
-    <div class="stat-row" id="lugares-stats"></div>
-    <p class="caption" id="lugares-rest-caption"></p>
+  <div id="mapa-lugares" class="mapa-explorar"></div>
 
-    <div class="aviso-card"><i data-lucide="info"></i> <span data-i18n="lugares_aviso"></span></div>
-
-    <div class="panel-box">
-      <div class="filtros-row">
-        <select id="filtro-categoria" multiple></select>
-        <input id="filtro-nome" type="text" data-i18n-placeholder="lugares_busca_nome">
-        <label class="checkbox-label"><input type="checkbox" id="filtro-so-info"> <span data-i18n="lugares_so_com_info"></span></label>
-      </div>
-      <div class="map-table-grid">
-        <div id="mapa-lugares" class="mapa"></div>
-        <div class="tabela-wrap">
-          <table id="tabela-lugares">
-            <thead><tr>
-              <th data-i18n="col_foto"></th><th data-i18n="col_ponto"></th>
-              <th data-i18n="col_categoria"></th><th data-i18n="col_acess"></th><th data-i18n="col_banheiro"></th>
-            </tr></thead>
-            <tbody></tbody>
-          </table>
-        </div>
-      </div>
-      <div class="legenda" id="legenda-lugares"></div>
+  <div class="controles-lugares">
+    <div class="chips-categoria" id="chips-categoria"></div>
+    <div class="controles-linha2">
+      <div class="busca-mini"><i data-lucide="search"></i><input id="filtro-nome" type="text" data-i18n-placeholder="lugares_busca_nome"></div>
+      <label class="toggle"><input type="checkbox" id="filtro-so-info"><span class="toggle-track"></span><span data-i18n="lugares_so_com_info"></span></label>
     </div>
+  </div>
 
-    <div class="panel-box">
-      <h3 data-i18n="ruas_titulo"></h3>
-      <div class="stat-row" id="ruas-stats"></div>
-      <p class="caption" data-i18n="ruas_caption"></p>
-      <div id="mapa-ruas" class="mapa"></div>
-    </div>
-  </section>
+  <div class="grid-lugares" id="grid-lugares"></div>
 
-  <!-- ANTES DE VIAJAR -->
-  <section id="panel-viagem" class="panel">
+  <div class="legenda" id="legenda-lugares"></div>
+
+  <div class="aviso-card"><i data-lucide="info"></i> <span data-i18n="lugares_aviso"></span></div>
+
+  <div class="subsecao">
+    <div class="eyebrow" data-i18n="ruas_eyebrow"></div>
+    <h3 data-i18n="ruas_titulo"></h3>
+    <p class="secao-caption" id="ruas-stat-texto"></p>
+    <div id="mapa-ruas" class="mapa-ruas"></div>
+    <p class="secao-caption" data-i18n="ruas_caption"></p>
+  </div>
+</section>
+
+<!-- ANTES DE VIAJAR -->
+<section id="viagem" class="secao secao-tintada">
+  <div class="secao-head">
+    <div class="eyebrow" data-i18n="viagem_eyebrow"></div>
     <h2 data-i18n="viagem_titulo"></h2>
-    <div class="grid-2">
-      <div class="panel-box">
-        <h4 data-i18n="viagem_aeroporto_titulo"></h4>
-        <div data-i18n-html="viagem_aeroporto_md"></div>
-      </div>
-      <div class="panel-box">
-        <h4 data-i18n="viagem_transporte_titulo"></h4>
-        <div data-i18n-html="viagem_transporte_md"></div>
-      </div>
-    </div>
-    <p class="caption" data-i18n="viagem_fontes"></p>
-  </section>
+  </div>
+  <div class="grid-editorial">
+    <article class="cartao-editorial cartao-vermelho">
+      <i data-lucide="plane" class="cartao-icone"></i>
+      <h3 data-i18n="viagem_aeroporto_titulo"></h3>
+      <div class="cartao-sub" data-i18n="viagem_aeroporto_sub"></div>
+      <div data-i18n-html="viagem_aeroporto_md"></div>
+    </article>
+    <article class="cartao-editorial cartao-verde">
+      <i data-lucide="train-front" class="cartao-icone"></i>
+      <h3 data-i18n="viagem_transporte_titulo"></h3>
+      <div class="cartao-sub" data-i18n="viagem_transporte_sub"></div>
+      <div data-i18n-html="viagem_transporte_md"></div>
+    </article>
+  </div>
+  <p class="secao-caption" data-i18n="viagem_fontes"></p>
+</section>
 
-  <!-- MINHA CIDADE -->
-  <section id="panel-cidade" class="panel">
+<!-- MINHA CIDADE -->
+<section id="cidade" class="secao">
+  <div class="secao-head">
+    <div class="eyebrow" data-i18n="cidade_eyebrow"></div>
     <h2 data-i18n="cidade_titulo"></h2>
-    <p class="caption" data-i18n="cidade_caption"></p>
-    <input id="busca-cidade" type="text" list="lista-cidades" data-i18n-placeholder="cidade_placeholder" autocomplete="off">
-    <datalist id="lista-cidades"></datalist>
-    <div id="resultado-cidade"></div>
-  </section>
+  </div>
+  <div id="resultado-cidade"></div>
+</section>
 
-  <!-- PANORAMA NO BRASIL -->
-  <section id="panel-brasil" class="panel">
+<!-- PANORAMA NO BRASIL -->
+<section id="brasil" class="secao secao-tintada">
+  <div class="secao-head">
+    <div class="eyebrow" data-i18n="brasil_eyebrow"></div>
     <h2 data-i18n="brasil_titulo"></h2>
-    <p class="caption" data-i18n="brasil_caption"></p>
-    <div class="panel-box">
-      <h3 data-i18n="brasil_mapa_titulo"></h3>
-      <div id="mapa-brasil" class="mapa" style="height:460px;"></div>
+    <p class="secao-caption" data-i18n="brasil_caption"></p>
+  </div>
+  <p class="destaque-brasil" id="destaque-brasil"></p>
+  <div class="grid-brasil">
+    <div class="painel-brasil">
+      <h4 data-i18n="brasil_mapa_titulo"></h4>
+      <div id="mapa-brasil" class="mapa-brasil"></div>
     </div>
-    <div class="panel-box">
-      <h3 data-i18n="brasil_regiao_titulo"></h3>
-      <canvas id="grafico-regiao" height="140"></canvas>
+    <div class="painel-brasil">
+      <h4 data-i18n="brasil_regiao_titulo"></h4>
+      <canvas id="grafico-regiao" height="260"></canvas>
     </div>
-  </section>
-
-</main>
+  </div>
+</section>
 
 <footer class="rodape">
-  <p>Dados: IBGE (Censo 2022, MUNIC 2020), RAIS 2024, OpenStreetMap. Parte do projeto <a href="https://github.com/Anajaraa/mapa-da-equidade" target="_blank" rel="noopener">Mapa da Equidade</a>.</p>
+  <p><span data-i18n="rodape_texto"></span> <a href="https://github.com/Anajaraa/mapa-da-equidade" target="_blank" rel="noopener" data-i18n="rodape_link"></a>.</p>
 </footer>
 
 <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
