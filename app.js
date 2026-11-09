@@ -44,6 +44,7 @@ function aplicarTraducoes() {
   renderizarSeletorCidade();
   renderizarLugares();
   renderizarLegenda();
+  renderizarViagemCidade();
   renderizarCidadeAtual();
   if (window.lucide) lucide.createIcons();
 }
@@ -67,13 +68,14 @@ function configurarNav() {
 
 // ---------------------------------------------------------------- CARREGAMENTO DE DADOS
 async function carregarDados() {
-  const [municipios, cidades, lugares, banheiros] = await Promise.all([
+  const [municipios, cidades, lugares, banheiros, viagem] = await Promise.all([
     fetch("data/municipios.json").then(r => r.json()),
     fetch("data/cidades.json").then(r => r.json()),
     fetch("data/lugares.json").then(r => r.json()),
     fetch("data/banheiros.json").then(r => r.json()),
+    fetch("data/viagem.json").then(r => r.json()),
   ]);
-  DADOS = { municipios, cidades, lugares, banheiros };
+  DADOS = { municipios, cidades, lugares, banheiros, viagem };
 }
 
 function renderizarEstatisticasHero() {
@@ -104,26 +106,34 @@ function nomeCidadeExibicao(slug) {
 }
 
 function renderizarSeletorCidade() {
-  const select = document.getElementById("seletor-cidade");
-  if (select.dataset.montado === "1") return; // monta uma vez só, idioma não muda os nomes de cidade
   const capitais = DADOS.cidades.filter(c => c.capital).sort((a, b) => a.cidade.localeCompare(b.cidade));
   const destinos = DADOS.cidades.filter(c => !c.capital).sort((a, b) => (a.apelido || a.cidade).localeCompare(b.apelido || b.cidade));
-
   const opcao = c => `<option value="${c.slug}">${c.apelido ? `${c.apelido} (${c.cidade})` : c.cidade}</option>`;
-  select.innerHTML = `
+  const html = `
     <optgroup label="${t("lugares_grupo_capitais")}">${capitais.map(opcao).join("")}</optgroup>
     <optgroup label="${t("lugares_grupo_destinos")}">${destinos.map(opcao).join("")}</optgroup>
   `;
-  select.value = cidadeAtual;
-  select.dataset.montado = "1";
-  select.addEventListener("change", () => {
-    cidadeAtual = select.value;
-    filtroCategoria = []; filtroNome = ""; filtroSoInfo = false;
-    document.getElementById("filtro-nome").value = "";
-    document.getElementById("filtro-so-info").checked = false;
-    renderizarLugares();
-    document.getElementById("lugares").scrollIntoView({ behavior: "smooth" });
+
+  ["seletor-cidade", "seletor-cidade-viagem"].forEach(id => {
+    const select = document.getElementById(id);
+    if (select.dataset.montado !== "1") {
+      select.innerHTML = html;
+      select.value = cidadeAtual;
+      select.dataset.montado = "1";
+      select.addEventListener("change", () => mudarCidade(select.value));
+    }
   });
+}
+
+function mudarCidade(novoSlug) {
+  cidadeAtual = novoSlug;
+  document.getElementById("seletor-cidade").value = novoSlug;
+  document.getElementById("seletor-cidade-viagem").value = novoSlug;
+  filtroCategoria = []; filtroNome = ""; filtroSoInfo = false;
+  document.getElementById("filtro-nome").value = "";
+  document.getElementById("filtro-so-info").checked = false;
+  renderizarLugares();
+  renderizarViagemCidade();
 }
 
 function lugaresDaCidade() {
@@ -272,6 +282,38 @@ function renderizarLegenda() {
     <span class="dot" style="background:${CORES.ambar}"></span>${wtxt.limited}
     <span class="dot" style="background:${CORES.cinza}"></span>${wtxt.nao_informado}
     <span class="dot" style="background:#AEB4B0"></span>${t("legenda_banheiro")}`;
+}
+
+// ---------------------------------------------------------------- ANTES DE VIAJAR (por cidade)
+function badgeConfianca(nivel) {
+  const chave = { alta: "viagem_confianca_alta", moderada: "viagem_confianca_moderada", baixa: "viagem_confianca_moderada", nao_encontrado: "viagem_confianca_nao_encontrado" }[nivel] || "viagem_confianca_moderada";
+  const classe = { alta: "badge-yes", moderada: "badge-limited", baixa: "badge-limited", nao_encontrado: "badge-nao_informado" }[nivel] || "badge-limited";
+  return `<span class="badge ${classe}">${t(chave)}</span>`;
+}
+
+function cartaoInfoViagem(icone, titulo, bloco, mensagemVazia) {
+  const corpo = bloco
+    ? `${badgeConfianca(bloco.confianca)}<p>${bloco[LANG] || bloco.pt}</p>`
+    : `${badgeConfianca("nao_encontrado")}<p>${mensagemVazia}</p>`;
+  return `
+    <article class="cartao-editorial cartao-violeta">
+      <i data-lucide="${icone}" class="cartao-icone"></i>
+      <h3>${titulo}</h3>
+      ${corpo}
+    </article>`;
+}
+
+function renderizarViagemCidade() {
+  if (!DADOS.viagem) return;
+  const nome = nomeCidadeExibicao(cidadeAtual);
+  document.getElementById("viagem-cidade-titulo").textContent = t("viagem_cidade_titulo").replace("{cidade}", nome);
+
+  const d = DADOS.viagem[cidadeAtual] || {};
+  document.getElementById("viagem-cidade-cards").innerHTML =
+    cartaoInfoViagem("plane", t("viagem_aeroporto_cidade_titulo"), d.aeroporto, t("viagem_sem_aeroporto")) +
+    cartaoInfoViagem("bus", t("viagem_transporte_cidade_titulo"), d.transporte, t("viagem_sem_transporte"));
+
+  if (window.lucide) lucide.createIcons();
 }
 
 // ---------------------------------------------------------------- MINHA CIDADE (índice nacional)

@@ -118,13 +118,16 @@
       <div class="cartao-sub" data-i18n="viagem_aeroporto_sub"></div>
       <div data-i18n-html="viagem_aeroporto_md"></div>
     </article>
-    <article class="cartao-editorial cartao-verde">
-      <i data-lucide="train-front" class="cartao-icone"></i>
-      <h3 data-i18n="viagem_transporte_titulo"></h3>
-      <div class="cartao-sub" data-i18n="viagem_transporte_sub"></div>
-      <div data-i18n-html="viagem_transporte_md"></div>
-    </article>
   </div>
+
+  <div class="seletor-cidade-linha">
+    <label for="seletor-cidade-viagem" class="seletor-cidade-label"><i data-lucide="map-pin"></i> <span data-i18n="lugares_cidade_label"></span></label>
+    <select id="seletor-cidade-viagem"></select>
+  </div>
+
+  <h3 id="viagem-cidade-titulo" class="viagem-cidade-titulo"></h3>
+  <div class="grid-editorial" id="viagem-cidade-cards"></div>
+
   <p class="secao-caption" data-i18n="viagem_fontes"></p>
 </section>
 
