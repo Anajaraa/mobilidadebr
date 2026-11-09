@@ -50,20 +50,16 @@
     <h1 data-i18n="hero_titulo"></h1>
     <p class="hero-sub" data-i18n="hero_subtitulo"></p>
 
-    <form class="hero-busca" id="form-busca-cidade">
-      <i data-lucide="search"></i>
-      <input id="busca-cidade" type="text" list="lista-cidades" data-i18n-placeholder="hero_busca_placeholder" autocomplete="off">
-      <datalist id="lista-cidades"></datalist>
-      <button type="submit" data-i18n="hero_busca_botao"></button>
-    </form>
-    <p class="hero-busca-erro" id="busca-cidade-erro"></p>
-    <a class="hero-cta-secundaria" href="#lugares" data-i18n="hero_cta_lugares"></a>
+    <div class="hero-ctas">
+      <a class="botao-primario" href="#lugares"><i data-lucide="map-pin"></i> <span data-i18n="hero_cta_lugares"></span></a>
+      <a class="hero-cta-secundaria" href="#cidade" data-i18n="hero_cta_secundaria"></a>
+    </div>
 
     <div class="hero-stats">
-      <div class="hero-stat"><span class="v">690</span><span class="l" data-i18n="hero_s1"></span></div>
-      <div class="hero-stat"><span class="v">31</span><span class="l" data-i18n="hero_s2"></span></div>
-      <div class="hero-stat"><span class="v">11.241</span><span class="l" data-i18n="hero_s3"></span></div>
-      <div class="hero-stat"><span class="v">5.570</span><span class="l" data-i18n="hero_s4"></span></div>
+      <div class="hero-stat"><span class="v" id="stat-lugares">—</span><span class="l" data-i18n="hero_s1"></span></div>
+      <div class="hero-stat"><span class="v" id="stat-cidades">—</span><span class="l" data-i18n="hero_s2"></span></div>
+      <div class="hero-stat"><span class="v" id="stat-banheiros">—</span><span class="l" data-i18n="hero_s3"></span></div>
+      <div class="hero-stat"><span class="v" id="stat-municipios">—</span><span class="l" data-i18n="hero_s4"></span></div>
     </div>
   </div>
 </section>
@@ -72,7 +68,6 @@
   <a class="chip-link" data-section="lugares" href="#lugares"><i data-lucide="map-pin"></i> <span data-i18n="nav_lugares"></span></a>
   <a class="chip-link" data-section="viagem" href="#viagem"><i data-lucide="plane"></i> <span data-i18n="nav_viagem"></span></a>
   <a class="chip-link" data-section="cidade" href="#cidade"><i data-lucide="building-2"></i> <span data-i18n="nav_cidade"></span></a>
-  <a class="chip-link" data-section="brasil" href="#brasil"><i data-lucide="map"></i> <span data-i18n="nav_brasil"></span></a>
 </nav>
 
 <div class="aviso-faixa">
@@ -84,8 +79,13 @@
 <section id="lugares" class="secao">
   <div class="secao-head">
     <div class="eyebrow" data-i18n="lugares_eyebrow"></div>
-    <h2 data-i18n="lugares_titulo"></h2>
+    <h2 id="lugares-titulo"></h2>
     <p class="secao-caption" data-i18n="lugares_caption"></p>
+  </div>
+
+  <div class="seletor-cidade-linha">
+    <label for="seletor-cidade" class="seletor-cidade-label"><i data-lucide="map-pin"></i> <span data-i18n="lugares_cidade_label"></span></label>
+    <select id="seletor-cidade"></select>
   </div>
 
   <div id="mapa-lugares" class="mapa-explorar"></div>
@@ -103,14 +103,6 @@
   <div class="legenda" id="legenda-lugares"></div>
 
   <div class="aviso-card"><i data-lucide="info"></i> <span data-i18n="lugares_aviso"></span></div>
-
-  <div class="subsecao">
-    <div class="eyebrow" data-i18n="ruas_eyebrow"></div>
-    <h3 data-i18n="ruas_titulo"></h3>
-    <p class="secao-caption" id="ruas-stat-texto"></p>
-    <div id="mapa-ruas" class="mapa-ruas"></div>
-    <p class="secao-caption" data-i18n="ruas_caption"></p>
-  </div>
 </section>
 
 <!-- ANTES DE VIAJAR -->
@@ -142,27 +134,16 @@
     <div class="eyebrow" data-i18n="cidade_eyebrow"></div>
     <h2 data-i18n="cidade_titulo"></h2>
   </div>
-  <div id="resultado-cidade"></div>
-</section>
 
-<!-- PANORAMA NO BRASIL -->
-<section id="brasil" class="secao secao-tintada">
-  <div class="secao-head">
-    <div class="eyebrow" data-i18n="brasil_eyebrow"></div>
-    <h2 data-i18n="brasil_titulo"></h2>
-    <p class="secao-caption" data-i18n="brasil_caption"></p>
-  </div>
-  <p class="destaque-brasil" id="destaque-brasil"></p>
-  <div class="grid-brasil">
-    <div class="painel-brasil">
-      <h4 data-i18n="brasil_mapa_titulo"></h4>
-      <div id="mapa-brasil" class="mapa-brasil"></div>
-    </div>
-    <div class="painel-brasil">
-      <h4 data-i18n="brasil_regiao_titulo"></h4>
-      <canvas id="grafico-regiao" height="260"></canvas>
-    </div>
-  </div>
+  <form class="busca-municipio" id="form-busca-municipio">
+    <i data-lucide="search"></i>
+    <input id="busca-municipio" type="text" list="lista-municipios" data-i18n-placeholder="cidade_busca_placeholder" autocomplete="off">
+    <datalist id="lista-municipios"></datalist>
+    <button type="submit" data-i18n="cidade_busca_botao"></button>
+  </form>
+  <p class="hero-busca-erro" id="busca-municipio-erro"></p>
+
+  <div id="resultado-cidade"></div>
 </section>
 
 <footer class="rodape">
@@ -170,8 +151,6 @@
 </footer>
 
 <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
-<script src="https://unpkg.com/leaflet.heat@0.2.0/dist/leaflet-heat.js"></script>
-<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.4/dist/chart.umd.min.js"></script>
 <script src="https://unpkg.com/lucide@latest/dist/umd/lucide.js"></script>
 <script src="i18n.js"></script>
 <script src="app.js"></script>

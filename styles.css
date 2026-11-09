@@ -82,21 +82,29 @@ a:hover { text-decoration: underline; }
 .hero h1 { font-size: clamp(2.1rem, 5vw, 3.4rem); margin-top: 10px; }
 .hero-sub { color: var(--ink-muted); font-size: 1.05rem; max-width: 56ch; margin: 0.6rem auto 1.8rem; }
 
-.hero-busca {
+.hero-ctas { display: flex; flex-direction: column; align-items: center; gap: 10px; }
+.botao-primario {
+  display: inline-flex; align-items: center; gap: 8px; font-family: var(--corpo); font-weight: 600; font-size: 15px;
+  color: white; background: var(--vermelho); border: none; border-radius: 999px; padding: 14px 28px; box-shadow: var(--sombra);
+}
+.botao-primario:hover { background: var(--vermelho-tinta); text-decoration: none; }
+.botao-primario [data-lucide] { width: 17px; height: 17px; }
+.hero-cta-secundaria { display: inline-block; font-size: 13.5px; color: var(--ink-muted); }
+.hero-cta-secundaria:hover { color: var(--vermelho); }
+
+.busca-municipio {
   display: flex; align-items: center; gap: 8px; background: var(--surface); border: 1px solid var(--line);
   border-radius: 999px; padding: 6px 8px 6px 18px; max-width: 480px; margin: 0 auto; box-shadow: var(--sombra);
 }
-.hero-busca [data-lucide] { width: 18px; height: 18px; color: var(--ink-muted); flex-shrink: 0; }
-.hero-busca input { flex: 1; border: none; background: none; font-family: var(--corpo); font-size: 15px; color: var(--ink); padding: 10px 4px; min-width: 0; }
-.hero-busca input:focus { outline: none; }
-.hero-busca button {
+.busca-municipio [data-lucide] { width: 18px; height: 18px; color: var(--ink-muted); flex-shrink: 0; }
+.busca-municipio input { flex: 1; border: none; background: none; font-family: var(--corpo); font-size: 15px; color: var(--ink); padding: 10px 4px; min-width: 0; }
+.busca-municipio input:focus { outline: none; }
+.busca-municipio button {
   font-family: var(--corpo); font-weight: 600; font-size: 14px; color: white; background: var(--vermelho);
   border: none; border-radius: 999px; padding: 11px 20px; cursor: pointer; white-space: nowrap;
 }
-.hero-busca button:hover { background: var(--vermelho-tinta); }
-.hero-busca-erro { color: var(--vermelho); font-size: 13px; min-height: 18px; margin: 8px 0 0; }
-.hero-cta-secundaria { display: inline-block; font-size: 13.5px; color: var(--ink-muted); margin-top: 6px; }
-.hero-cta-secundaria:hover { color: var(--vermelho); }
+.busca-municipio button:hover { background: var(--vermelho-tinta); }
+.hero-busca-erro { color: var(--vermelho); font-size: 13px; min-height: 18px; margin: 8px 0 0; text-align: center; }
 
 .hero-stats { display: flex; justify-content: center; gap: 28px; margin-top: 2.4rem; flex-wrap: wrap; }
 .hero-stat { display: flex; flex-direction: column; align-items: center; position: relative; padding: 0 20px; }
@@ -125,11 +133,18 @@ a:hover { text-decoration: underline; }
 .secao { max-width: 1080px; margin: 0 auto; padding: 72px 24px; scroll-margin-top: 110px; }
 .secao-tintada { background: var(--bg-alt); max-width: none; padding-left: 0; padding-right: 0; }
 .secao-tintada > * { max-width: 1080px; margin-left: auto; margin-right: auto; }
-.secao-tintada .grid-editorial, .secao-tintada .grid-brasil, .secao-tintada .secao-head, .secao-tintada .secao-caption, .secao-tintada .destaque-brasil { padding-left: 24px; padding-right: 24px; }
+.secao-tintada .grid-editorial, .secao-tintada .secao-head, .secao-tintada .secao-caption { padding-left: 24px; padding-right: 24px; }
 .secao-head { text-align: center; max-width: 640px; margin: 0 auto 36px; }
 .secao-head h2 { font-size: clamp(1.7rem, 3.4vw, 2.3rem); }
 
-/* ---------- Lugares: mapa + controles + grid ---------- */
+/* ---------- Lugares: seletor de cidade + mapa + controles + grid ---------- */
+.seletor-cidade-linha { display: flex; align-items: center; gap: 10px; justify-content: center; margin-bottom: 20px; flex-wrap: wrap; }
+.seletor-cidade-label { display: inline-flex; align-items: center; gap: 6px; font-size: 13.5px; font-weight: 600; color: var(--ink-muted); }
+.seletor-cidade-label [data-lucide] { width: 15px; height: 15px; color: var(--vermelho); }
+#seletor-cidade {
+  font-family: var(--corpo); font-weight: 600; font-size: 15px; color: var(--ink); background: var(--surface);
+  border: 1px solid var(--line); border-radius: 999px; padding: 10px 18px; cursor: pointer; box-shadow: var(--sombra);
+}
 .mapa-explorar { height: 440px; border-radius: 18px; overflow: hidden; border: 1px solid var(--line); box-shadow: var(--sombra); margin-bottom: 20px; }
 .controles-lugares { display: flex; flex-direction: column; gap: 14px; margin-bottom: 24px; }
 .chips-categoria { display: flex; gap: 8px; flex-wrap: wrap; }
@@ -176,10 +191,6 @@ a:hover { text-decoration: underline; }
 .aviso-card { background: var(--ambar-fundo); border-left: 4px solid var(--ambar); padding: 1rem 1.3rem; border-radius: 0 12px 12px 0; margin: 0 0 48px; font-size: 13.5px; }
 .aviso-card [data-lucide] { color: var(--ambar); width: 16px; height: 16px; vertical-align: -3px; }
 
-.subsecao { border-top: 1px solid var(--line); padding-top: 40px; }
-.subsecao h3 { font-size: 1.3rem; }
-.mapa-ruas { height: 360px; border-radius: 16px; overflow: hidden; border: 1px solid var(--line); margin: 12px 0; }
-
 /* ---------- Viagem: cartões editoriais ---------- */
 .grid-editorial { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 20px; max-width: 1080px; margin: 0 auto; }
 .cartao-editorial { background: var(--surface); border-radius: 16px; padding: 28px 28px 24px; box-shadow: var(--sombra); border-top: 4px solid var(--cinza); }
@@ -212,15 +223,6 @@ a:hover { text-decoration: underline; }
 .numero-grande .num { font-family: var(--display); font-size: 2.6rem; font-weight: 600; line-height: 1; color: var(--vermelho); font-variant-numeric: tabular-nums; }
 .numero-grande .label { font-size: 11.5px; color: var(--ink-muted); text-transform: uppercase; letter-spacing: 0.03em; margin-top: 4px; line-height: 1.4; }
 
-.comparacao { margin-bottom: 24px; }
-.comparacao-label { font-size: 13px; color: var(--ink-muted); margin-bottom: 10px; }
-.barra-comparacao { display: flex; flex-direction: column; gap: 10px; }
-.barra-linha { display: grid; grid-template-columns: 100px 1fr 40px; align-items: center; gap: 10px; font-size: 13px; }
-.barra-linha span { color: var(--ink-muted); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
-.barra { height: 8px; background: var(--line); border-radius: 999px; overflow: hidden; }
-.barra-fill { height: 100%; border-radius: 999px; }
-.barra-linha b { font-variant-numeric: tabular-nums; text-align: right; }
-
 .ficha-stats { display: grid; grid-template-columns: repeat(auto-fit, minmax(140px, 1fr)); gap: 16px; padding: 18px 0; border-top: 1px solid var(--line); margin-bottom: 18px; }
 .num-media { display: block; font-family: var(--display); font-size: 1.15rem; font-weight: 600; text-transform: capitalize; }
 .ficha-stats .label { font-size: 11.5px; color: var(--ink-muted); text-transform: uppercase; letter-spacing: 0.03em; }
@@ -229,14 +231,6 @@ a:hover { text-decoration: underline; }
 #btn-baixar-cidade { display: inline-flex; align-items: center; gap: 7px; font-family: var(--corpo); font-weight: 600; font-size: 14px; padding: 11px 18px; border-radius: 999px; border: none; background: var(--vermelho); color: white; cursor: pointer; }
 #btn-baixar-cidade:hover { background: var(--vermelho-tinta); }
 #btn-baixar-cidade [data-lucide] { width: 15px; height: 15px; }
-
-/* ---------- Brasil ---------- */
-.destaque-brasil { text-align: center; font-family: var(--display); font-size: 1.15rem; max-width: 720px; margin: 0 auto 32px; }
-.grid-brasil { display: grid; grid-template-columns: 1.1fr 1fr; gap: 24px; max-width: 1080px; margin: 0 auto; }
-@media (max-width: 860px) { .grid-brasil { grid-template-columns: 1fr; } }
-.painel-brasil { background: var(--surface); border-radius: 16px; padding: 20px 22px; box-shadow: var(--sombra); }
-.painel-brasil h4 { font-size: 1rem; font-family: var(--corpo); font-weight: 700; margin-bottom: 12px; }
-.mapa-brasil { height: 380px; border-radius: 10px; overflow: hidden; }
 
 /* ---------- Footer ---------- */
 footer.rodape { text-align: center; padding: 32px 24px 48px; color: var(--ink-muted); font-size: 13px; border-top: 1px solid var(--line); }
@@ -259,5 +253,4 @@ footer.rodape { text-align: center; padding: 32px 24px 48px; color: var(--ink-mu
   .hero { padding: 48px 18px 36px; }
   .ficha-cidade { padding: 24px 20px; }
   .chip-nav { top: 49px; }
-  .barra-linha { grid-template-columns: 70px 1fr 36px; font-size: 12px; }
 }
