@@ -1,7 +1,7 @@
 // mobilidadeBR — lógica principal. Usa i18n.js (dicionário) e busca os
 // dados já exportados em data/*.json pelo pipeline Python do projeto.
 
-const CORES = { vermelho: "#C1272D", violeta: "#6C5296", verde: "#2E6F4E", ambar: "#B5790A", cinza: "#8A8F8C" };
+const CORES = { laranja: "#C96A2E", violeta: "#6B4A2E", verde: "#3F7D4C", ambar: "#B5790A", cinza: "#948872", erro: "#C6433A" };
 
 let LANG = localStorage.getItem("lang") || "pt";
 let DADOS = {};
@@ -12,7 +12,7 @@ const CATEGORIA_ICONE = {
   museum: "landmark", attraction: "sparkles", viewpoint: "mountain", gallery: "image",
   historic: "landmark", hotel: "bed", mall: "shopping-bag",
   restaurant: "utensils", fast_food: "utensils", cafe: "coffee", artwork: "palette",
-  stadium: "flag", nightclub: "music", events_venue: "party-popper",
+  stadium: "flag", nightclub: "music", events_venue: "party-popper", teatro: "drama",
 };
 
 // ---------------------------------------------------------------- TEMA
@@ -88,7 +88,7 @@ function renderizarEstatisticasHero() {
 // ---------------------------------------------------------------- LUGARES ACESSÍVEIS
 let mapaLugares;
 let cidadeAtual = "sp";
-let filtroCategoria = [], filtroNome = "", filtroSoInfo = false;
+let categoriaAtual = null, filtroNome = "", filtroSoInfo = false;
 let marcadoresLugares = [];
 
 function categoriaTexto(c) {
@@ -129,7 +129,7 @@ function mudarCidade(novoSlug) {
   cidadeAtual = novoSlug;
   document.getElementById("seletor-cidade").value = novoSlug;
   document.getElementById("seletor-cidade-viagem").value = novoSlug;
-  filtroCategoria = []; filtroNome = ""; filtroSoInfo = false;
+  categoriaAtual = null; filtroNome = ""; filtroSoInfo = false;
   document.getElementById("filtro-nome").value = "";
   document.getElementById("filtro-so-info").checked = false;
   renderizarLugares();
@@ -140,32 +140,49 @@ function lugaresDaCidade() {
   return DADOS.lugares.filter(p => p.cidade_slug === cidadeAtual);
 }
 
-function construirChipsCategoria() {
-  const caixa = document.getElementById("chips-categoria");
+function construirCategoriasGrid() {
+  const caixa = document.getElementById("categorias-grid");
   const vistos = new Map();
-  lugaresDaCidade().forEach(p => { if (!vistos.has(p.categoria)) vistos.set(p.categoria, categoriaTexto(p)); });
-  const categorias = [...vistos.entries()].sort((a, b) => a[1].localeCompare(b[1]));
-
-  const chipTodos = `<button class="chip ${filtroCategoria.length === 0 ? "ativo" : ""}" data-cat="">${t("lugares_chip_todas")}</button>`;
-  const chips = categorias.map(([raw, label]) => `<button class="chip ${filtroCategoria.includes(raw) ? "ativo" : ""}" data-cat="${raw}">${label}</button>`);
-  caixa.innerHTML = [chipTodos, ...chips].join("");
-
-  caixa.querySelectorAll(".chip").forEach(botao => {
-    botao.addEventListener("click", () => {
-      const cat = botao.dataset.cat;
-      if (cat === "") { filtroCategoria = []; }
-      else if (filtroCategoria.includes(cat)) { filtroCategoria = filtroCategoria.filter(c => c !== cat); }
-      else { filtroCategoria = [...filtroCategoria, cat]; }
-      construirChipsCategoria();
-      renderizarGridLugares();
-      renderizarMapaLugares();
-    });
+  lugaresDaCidade().forEach(p => {
+    if (!vistos.has(p.categoria)) vistos.set(p.categoria, { label: categoriaTexto(p), count: 0 });
+    vistos.get(p.categoria).count++;
   });
+  const categorias = [...vistos.entries()].sort((a, b) => a[1].label.localeCompare(b[1].label));
+
+  caixa.innerHTML = categorias.map(([raw, info]) => `
+    <button class="categoria-tile" data-cat="${raw}" type="button">
+      <span class="categoria-tile-icone"><i data-lucide="${CATEGORIA_ICONE[raw] || "map-pin"}"></i></span>
+      <span class="categoria-tile-label">${info.label}</span>
+      <span class="categoria-tile-count">${info.count}</span>
+    </button>`).join("");
+
+  caixa.querySelectorAll(".categoria-tile").forEach(botao => {
+    botao.addEventListener("click", () => selecionarCategoria(botao.dataset.cat));
+  });
+
+  if (window.lucide) lucide.createIcons();
+}
+
+function selecionarCategoria(raw) {
+  categoriaAtual = raw;
+  filtroNome = ""; filtroSoInfo = false;
+  document.getElementById("filtro-nome").value = "";
+  document.getElementById("filtro-so-info").checked = false;
+  renderizarLugares();
+}
+
+function voltarParaCategorias() {
+  categoriaAtual = null;
+  filtroNome = ""; filtroSoInfo = false;
+  document.getElementById("filtro-nome").value = "";
+  document.getElementById("filtro-so-info").checked = false;
+  renderizarLugares();
+  document.getElementById("categorias-grid").scrollIntoView({ behavior: "smooth", block: "start" });
 }
 
 function aplicarFiltrosLugares() {
   return lugaresDaCidade().filter(p => {
-    if (filtroCategoria.length && !filtroCategoria.includes(p.categoria)) return false;
+    if (categoriaAtual && p.categoria !== categoriaAtual) return false;
     if (filtroNome && !p.nome.toLowerCase().includes(filtroNome.toLowerCase())) return false;
     if (filtroSoInfo && p.wheelchair === "nao_informado") return false;
     return true;
@@ -173,15 +190,34 @@ function aplicarFiltrosLugares() {
 }
 
 function corAcessibilidade(w) {
-  return { yes: CORES.verde, limited: CORES.ambar }[w] || CORES.cinza;
+  return { yes: CORES.verde, limited: CORES.ambar, no: CORES.erro }[w] || CORES.cinza;
 }
 
 function renderizarLugares() {
   if (!DADOS.lugares) return;
   document.getElementById("lugares-titulo").textContent = t("lugares_titulo").replace("{cidade}", nomeCidadeExibicao(cidadeAtual));
-  construirChipsCategoria();
-  renderizarGridLugares();
+
+  const emCategoria = categoriaAtual !== null;
+  document.getElementById("categorias-grid").hidden = emCategoria;
+  document.getElementById("detalhe-categoria").hidden = !emCategoria;
+
+  if (emCategoria) {
+    renderizarDetalheCategoria();
+  } else {
+    construirCategoriasGrid();
+  }
   renderizarMapaLugares();
+}
+
+function renderizarDetalheCategoria() {
+  const lugaresCategoria = aplicarFiltrosLugares();
+  const todosDaCategoria = lugaresDaCidade().filter(p => p.categoria === categoriaAtual);
+  const label = todosDaCategoria[0] ? categoriaTexto(todosDaCategoria[0]) : categoriaAtual;
+  document.getElementById("detalhe-categoria-titulo").textContent = t("lugares_detalhe_titulo")
+    .replace("{categoria}", label)
+    .replace("{cidade}", nomeCidadeExibicao(cidadeAtual))
+    .replace("{n}", lugaresCategoria.length);
+  renderizarGridLugares();
 }
 
 function ordenarPorInfo(lista) {
@@ -203,8 +239,10 @@ function renderizarGridLugares() {
     return;
   }
 
+  const nomeCidade = nomeCidadeExibicao(cidadeAtual);
+
   grid.innerHTML = lugares.map((p, i) => {
-    const imagem = p.imagem
+    const avatar = p.imagem
       ? `<img src="${p.imagem}" loading="lazy" alt="">`
       : `<i data-lucide="${CATEGORIA_ICONE[p.categoria] || "map-pin"}"></i>`;
     const distancia = p.banheiro_acessivel_m != null
@@ -212,14 +250,20 @@ function renderizarGridLugares() {
       : t("lugares_banheiro_sem");
     return `
       <article class="lugar-card" data-idx="${i}" tabindex="0">
-        <div class="lugar-img ${p.imagem ? "" : "lugar-img-placeholder"}">${imagem}</div>
+        <div class="lugar-card-topo">
+          <div class="lugar-avatar ${p.imagem ? "lugar-avatar-foto" : ""}">${avatar}</div>
+          <span class="badge badge-${p.wheelchair}">${wtxt[p.wheelchair] || wtxt.nao_informado}</span>
+        </div>
         <div class="lugar-corpo">
-          <div class="lugar-topo">
-            <span class="lugar-categoria">${categoriaTexto(p)}</span>
-            <span class="badge badge-${p.wheelchair}">${wtxt[p.wheelchair] || wtxt.nao_informado}</span>
-          </div>
+          <span class="lugar-categoria">${categoriaTexto(p)}</span>
           <h4>${p.nome}</h4>
+          <div class="lugar-local"><i data-lucide="map-pin"></i> ${nomeCidade}</div>
+          <div class="lugar-divisor"></div>
           <div class="lugar-banheiro"><i data-lucide="droplet"></i> ${distancia}</div>
+          <div class="lugar-divisor"></div>
+          <a class="lugar-como-chegar" href="https://www.google.com/maps/dir/?api=1&destination=${p.lat},${p.lon}" target="_blank" rel="noopener">
+            <span>${t("lugares_como_chegar")}</span><i data-lucide="arrow-up-right"></i>
+          </a>
         </div>
       </article>`;
   }).join("");
@@ -228,6 +272,7 @@ function renderizarGridLugares() {
     const ir = () => focarMarcador(Number(card.dataset.idx));
     card.addEventListener("click", ir);
     card.addEventListener("keydown", e => { if (e.key === "Enter") ir(); });
+    card.querySelector(".lugar-como-chegar").addEventListener("click", e => e.stopPropagation());
   });
 
   if (window.lucide) lucide.createIcons();
@@ -450,6 +495,7 @@ async function iniciar() {
     renderizarGridLugares();
     renderizarMapaLugares();
   });
+  document.getElementById("btn-voltar-categoria").addEventListener("click", voltarParaCategorias);
 }
 
 document.addEventListener("DOMContentLoaded", iniciar);
